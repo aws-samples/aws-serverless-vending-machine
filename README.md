@@ -2,7 +2,9 @@
 
 These sample applications demonstrate how to create a solution to developer teams consume IaC Products, like a "Vending Machine", to automated deploy cloud service in their AWS Accounts without open a ticket or request in IT department.
 
-In other hand, the CCoE teams or SysOps administrators can create Cloud Products, for example, a .NET application running in ECS, Fargate and a CI/CD pipelines or operational products, like a VPC with a Transit Gateway Peering. BUT NOT USE THIS TO CREATE A CONSOLE OVER THE AWS CONSOLE!
+In other hand, the CCoE teams or SysOps administrators can create Cloud Products, for example, a .NET application running in ECS, Fargate and a CI/CD pipelines or operational products, like a VPC with a Transit Gateway Peering. 
+
+*DO NOT USE THIS SOLUTION TO CREATE A CONSOLE OVER THE AWS CONSOLE!*
 
 This sample code is made available under a modified MIT license. See the LICENSE file.
 
