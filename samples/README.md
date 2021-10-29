@@ -2,7 +2,7 @@ The [templates/product-workspaces.yaml](./templates/product-workspaces.yaml) fil
 ```
 Resources:
   Workspaces:
-    **Type: "AWS::ServiceCatalog::CloudFormationProvisionedProduct"**
+    Type: "AWS::ServiceCatalog::CloudFormationProvisionedProduct"
     Properties:
      ProductName: "Workspace"
      ProvisioningArtifactName: "Workspace Template"
@@ -25,11 +25,13 @@ aws cloudformation create-stack-set --capabilities=CAPABILITY_NAMED_IAM \
   --regions ["us-east-1", "us-east-2"] \
  --operation-preferences FailureToleranceCount=7
 ```
+
 Once you have the CloudFormation templates, save them in the S3 bucket created during infrastructure deployment, in the _*S3VendingMachineTemplatesBucket*_ output. This bucket has been configured with a bucket policy to be accessible by the organization's accounts and will be referenced by the stackinstances deployments. Save the template file with the following command:
 ```
 aws s3 cp samples/templates/product-workspaces.yaml \
  s3://...-s3templates-....
 ```
+
 Next we will format a JSON with instructions to make the products available in the Self-service portal, with name, description, images, parameters, the link to the template and tags. The application builds the product forms dynamically from the Options and Tags block, so you can have products with different variables. Examples of this JSON framework and the explanation of how to build them are in the _*[JSON/README.md file.](./JSON)*_ Change the templateUrl pointing to the files we just saved in S3:
 
 ```
@@ -46,7 +48,7 @@ Next we will format a JSON with instructions to make the products available in t
         "ParameterKey": "User"
       }
     ],
-    _*"templateUrl": "https://XXXXX.s3-sa-east-1.amazonaws.com/products/product-workspace.yaml"*_
+    "templateUrl": "https://XXXXX.s3-sa-east-1.amazonaws.com/products/product-workspace.yaml"
   },
   "options": [...],
   "tags": [ ... ]
