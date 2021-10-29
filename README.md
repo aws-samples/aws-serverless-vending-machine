@@ -58,6 +58,8 @@ aws s3 cp . s3://...cloudfrontauthorizationedge-.... —recursive
 
 And now just open the Vending Machine Website. You can get the VM URL on the *VendingMachineUrl* variable in the Stack Output.
 
+There are more information to add Products in the folder [samples](./samples).
+
 ## Security
 
 See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more information.
