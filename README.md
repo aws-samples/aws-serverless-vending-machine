@@ -2,7 +2,7 @@
 
 These sample applications demonstrate how to create a solution to developer teams consume IaC Products, like a "Vending Machine", to automated deploy cloud service in their AWS Accounts without open a ticket or request in IT department.
 
-![Vending Machine Concept](/images/vendingmachine-sample.png |  width=550)
+<img src="/images/vendingmachine-sample.pnge" width="550">
 
 In other hand, the CCoE teams or SysOps administrators can create Cloud Products, for example, a .NET application running in ECS, Fargate and a CI/CD pipelines or operational products, like a VPC with a Transit Gateway Peering.
 
