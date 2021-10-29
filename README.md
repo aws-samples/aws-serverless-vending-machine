@@ -31,8 +31,10 @@ API: {
      endpoints: [
          {
              name: "VendingMachine-API",
+             
              //CHANGE HERE THE VENDING MACHINE API
-             *endpoint: "https://RESTAPIID.execute-api.sa-east-1.amazonaws.com/default",*
+             endpoint: "https://RESTAPIID.execute-api.sa-east-1.amazonaws.com/default",
+             
              custom_header: async () => {
                 return { Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}` }
              }
