@@ -1,0 +1,12 @@
+{
+    "Paths": {
+        "Quantity": 4,
+        "Items": [
+            "/*",
+            "/static/js/*",
+            "/static/*",
+            "/static/css/*"
+        ]
+    },
+    "CallerReference": "cli-request"
+}

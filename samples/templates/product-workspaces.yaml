@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: CFN Template used by the Vending Machine to provisioning products in destination accounts
+
+Parameters:
+  User:
+    AllowedPattern: ^([a-zA-Z0-9]*)$
+    Description: The Amazon RDS master username.
+    ConstraintDescription: Must contain only alphanumeric characters and be at least 8 characters.
+    MaxLength: 16
+    MinLength: 1
+    Type: String
+    Default: user1
+
+Resources:
+
+  Workspaces:
+    Type: "AWS::ServiceCatalog::CloudFormationProvisionedProduct"
+    Properties:
+     ProductName: "Workspace"
+     ProvisioningArtifactName: "Workspace Template"
+     ProvisioningParameters:
+        -
+          Key: Bundle
+          Value: wsb-9jvhtb24f
+        -
+          Key: Directory
+          Value: d-94673a5b60
+        -
+          Key: User
+          Value: !Ref User
+        -
+          Key: EncryptionKey
+          Value: arn:aws:kms:sa-east-1:045096474033:key/1fb6be79-3ddb-470c-a359-6b29d6305a14
+     Tags:
+       -
+         Key: "application"
+         Value: "workspace"
+       -
+         Key: "provisioned"
+         Value: "vendingmachine"

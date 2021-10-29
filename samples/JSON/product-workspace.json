@@ -1,0 +1,68 @@
+{
+  "image": "workspace.png",
+  "stack": {
+    "stacksetName": "Workspace",
+    "parameters": [
+      {
+        "ParameterValue": "user1",
+        "ParameterKey": "User"
+      }
+    ],
+    "templateUrl": "https://vendingmachinetemplates.s3-sa-east-1.amazonaws.com/products/vm-workspace.yaml"
+  },
+  "cfntemplate": "vm-workspaces.yaml",
+  "imagecard": "workspace-card.png",
+  "name": "Workspace",
+  "options": [
+    {
+      "name": "User",
+      "label": "Usuário",
+      "type": "text",
+      "required": "true"
+    }
+  ],
+  "description": "O Amazon WorkSpaces é um serviço de virtualização de desktop persistente e totalmente gerenciado",
+  "tags": [
+    {
+      "name": "account",
+      "label": "Conta",
+      "type": "options",
+      "values": [
+        "045096474033"
+      ]
+    },
+    {
+      "name": "region",
+      "label": "Região",
+      "type": "options",
+      "values": [
+        "sa-east-1"
+      ]
+    },
+    {
+      "name": "critical",
+      "label": "Criticidade",
+      "type": "options",
+      "values": [
+        "Alta",
+        "Media",
+        "Baixa"
+      ]
+    },
+    {
+      "name": "centrocusto",
+      "type": "text",
+      "label": "Centro de Custo"
+    },
+    {
+      "name": "environment",
+      "label": "Ambiente",
+      "type": "options",
+      "values": [
+        "produção",
+        "desenvolvimento",
+        "homologação"
+      ]
+    }
+  ]
+}
