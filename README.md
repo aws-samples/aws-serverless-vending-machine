@@ -26,7 +26,7 @@ git clone https://github.com/aws-samples/aws-severless-vending-machine
 
 Deploy the Stack file [scripts/deployServerlessVendingMachine.yaml](./scripts/deployServerlessVendingMachine.yaml) at the end check the Stack Outputs to follow the instalation process.
 
-The next step is edit the App.js file to change the REST API endpoint:
+The next step is edit the [App.js](site/vendingmachineapp/src/App.js) file to change the REST API endpoint:
 
 ```
 API: {
