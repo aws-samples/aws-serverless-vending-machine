@@ -2,7 +2,7 @@ The [templates/product-workspaces.yaml](./templates/product-workspaces.yaml) fil
 ```
 Resources:
   Workspaces:
-    *Type: "AWS::ServiceCatalog::CloudFormationProvisionedProduct"*
+    **Type: "AWS::ServiceCatalog::CloudFormationProvisionedProduct"**
     Properties:
      ProductName: "Workspace"
      ProvisioningArtifactName: "Workspace Template"
