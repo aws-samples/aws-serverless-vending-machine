@@ -381,7 +381,46 @@ Resources:
                     - Arn
                 Effect: Allow
               - Action:
-                  - 'cloudformation:*'
+                  - 'cloudformation:CreateChangeSet'
+                  - 'cloudformation:CreateStack'
+                  - 'cloudformation:CreateStackInstances'
+                  - 'cloudformation:CreateStackSet'
+                  - 'cloudformation:CreateUploadBucket'
+                  - 'cloudformation:DeleteStack'
+                  - 'cloudformation:DeleteStackInstances'
+                  - 'cloudformation:DeleteStackSet'
+                  - 'cloudformation:DescribeChangeSet'
+                  - 'cloudformation:DescribeStackEvents'
+                  - 'cloudformation:DescribeStackInstance'
+                  - 'cloudformation:DescribeStackResource'
+                  - 'cloudformation:DescribeStackResourceDrifts'
+                  - 'cloudformation:DescribeStackResources'
+                  - 'cloudformation:DescribeStackSet'
+                  - 'cloudformation:DescribeStackSetOperation'
+                  - 'cloudformation:DescribeStacks'
+                  - 'cloudformation:DescribeType'
+                  - 'cloudformation:DescribeTypeRegistration'
+                  - 'cloudformation:DetectStackDrift'
+                  - 'cloudformation:DetectStackResourceDrift'
+                  - 'cloudformation:EstimateTemplateCost'
+                  - 'cloudformation:ExecuteChangeSet'
+                  - 'cloudformation:GetStackPolicy'
+                  - 'cloudformation:GetTemplate'
+                  - 'cloudformation:GetTemplateSummary'
+                  - 'cloudformation:ImportStacksToStackSet'
+                  - 'cloudformation:ListStackInstances'
+                  - 'cloudformation:ListStackResources'
+                  - 'cloudformation:ListStackSetOperationResults'
+                  - 'cloudformation:ListStackSetOperations'
+                  - 'cloudformation:ListStackSets'
+                  - 'cloudformation:ListStacks'
+                  - 'cloudformation:StopStackSetOperation'
+                  - 'cloudformation:TagResource'
+                  - 'cloudformation:UntagResource'
+                  - 'cloudformation:UpdateStack'
+                  - 'cloudformation:UpdateStackInstances'
+                  - 'cloudformation:UpdateStackSet'
+                  - 'cloudformation:ValidateTemplate'
                 Resource: '*'
                 Effect: Allow
       AssumeRolePolicyDocument:
@@ -766,7 +805,9 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - "logs:*"
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
                 Resource: !Sub "arn:${AWS::Partition}:logs:*:*:*"
 
   ExecutionApiStage:
@@ -887,7 +928,9 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - "logs:*"
+                  - 'logs:CreateLogGroup'
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
                 Resource: !Sub "arn:${AWS::Partition}:logs:*:*:*"
         - PolicyName: StepFunctionsPolicy
           PolicyDocument:
