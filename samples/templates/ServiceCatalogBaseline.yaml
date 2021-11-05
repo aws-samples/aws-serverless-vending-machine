@@ -15,43 +15,6 @@ Resources:
 #products creation
 # you can find samples templates on https://github.com/aws-samples/aws-service-catalog-reference-architectures
 
-  VPCProduct:
-    Type: "AWS::ServiceCatalog::CloudFormationProduct"
-    Properties:
-      AcceptLanguage: "en"
-      Description: "This product builds one Amazon VPC"
-      Distributor: "Amazon"
-      Name: "Amazon Private VPC"
-      Owner: "IT Services"
-      SupportEmail: "support@octank.edu.br"
-      SupportUrl: "https://www.amazon.com"
-      SupportDescription: "Support Description"
-      ProvisioningArtifactParameters:
-      -
-        Description: "Private VPC"
-        Name: "Private VPC"
-        Info:
-          #LoadTemplateFromURL : "https://raw.githubusercontent.com/aws-samples/aws-service-catalog-reference-architectures/master/vpc/sc-vpc-ra.json"
-          LoadTemplateFromURL : "https://s3.amazonaws.com/vendingmachinetemplates/servicecatalog/sc-product-vpc.json"
-
-  Moodle:
-    Type: "AWS::ServiceCatalog::CloudFormationProduct"
-    Properties:
-      AcceptLanguage: "en"
-      Description: "This product builds a complete Moodle environment"
-      Distributor: "Amazon"
-      Name: "Moodle"
-      Owner: "IT Services"
-      SupportEmail: "support@octank.edu.br"
-      SupportUrl: "https://www.amazon.com"
-      SupportDescription: "Support Description"
-      ProvisioningArtifactParameters:
-      -
-        Description: "Moodle Cloudformation Template"
-        Name: "Moodle Template"
-        Info:
-          LoadTemplateFromURL : "https://s3.amazonaws.com/vendingmachinetemplates/servicecatalog/moodle/00-master.yaml"
-
   Workspaces:
     Type: "AWS::ServiceCatalog::CloudFormationProduct"
     Properties:
@@ -69,43 +32,6 @@ Resources:
         Name: "Workspace Template"
         Info:
           LoadTemplateFromURL : "https://s3.amazonaws.com/vendingmachinetemplates/servicecatalog/workspace/workspaces-sc-template.yaml"
-
-
-  EC2LinuxProduct:
-    Type: "AWS::ServiceCatalog::CloudFormationProduct"
-    Properties:
-      AcceptLanguage: "en"
-      Description: "This product builds one Amazon Linux EC2 instance and create a SSM patch baseline, maintenance window, and patch task to scan for and install operating system updates the EC2 instance."
-      Distributor: "Amazon"
-      Name: "Amazon Elastic Compute Cloud (EC2) Linux"
-      Owner: "IT Services"
-      SupportEmail: "support@octank.edu.br"
-      SupportUrl: "https://www.amazon.com"
-      SupportDescription: "Support Description"
-      ProvisioningArtifactParameters:
-      -
-        Description: "Linux EC2 Instance"
-        Name: "Linux EC2 Instance"
-        Info:
-          LoadTemplateFromURL : "https://raw.githubusercontent.com/aws-samples/aws-service-catalog-reference-architectures/master/ec2/sc-ec2-linux-ra.json"
-
-  LinuxAssociation:
-    Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
-    Properties:
-      ProductId: !Ref EC2LinuxProduct
-      PortfolioId: !Ref BaselinePortfolio
-
-  VPCAssociation:
-     Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
-     Properties:
-       ProductId: !Ref VPCProduct
-       PortfolioId: !Ref BaselinePortfolio
-
-  MoodleAssociation:
-     Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
-     Properties:
-       ProductId: !Ref Moodle
-       PortfolioId: !Ref BaselinePortfolio
 
   WorkspacesAssociation:
      Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
@@ -133,48 +59,6 @@ Resources:
       PortfolioId: !Ref BaselinePortfolio
       PrincipalARN: !Sub "arn:aws:iam::${AWS::AccountId}:role/AWSCloudFormationStackSetExecutionRole"
       PrincipalType: "IAM"
-
-
-#default tags values
-  LinuxInstaceTypeTagOption:
-    Type: "AWS::ServiceCatalog::TagOption"
-    Properties:
-      Key: "InstanceType"
-      Value: "Linux"
-
-  LinuxInstaceTypeTagOptionAssociation:
-    Type: "AWS::ServiceCatalog::TagOptionAssociation"
-    Properties:
-      ResourceId: !Ref EC2LinuxProduct
-      TagOptionId: !Ref LinuxInstaceTypeTagOption
-
-#Prducts constraints association
-  VPCBaselineLaunchConstraint:
-    Type: "AWS::ServiceCatalog::LaunchRoleConstraint"
-    Properties:
-      Description: "Allows the product to launch with the policies granted by the associated role."
-      PortfolioId: !Ref BaselinePortfolio
-      ProductId: !Ref VPCProduct
-      RoleArn: !GetAtt LaunchConstraintRole.Arn
-    DependsOn: VPCAssociation
-
-  LinuxLaunchConstraint:
-    Type: "AWS::ServiceCatalog::LaunchRoleConstraint"
-    Properties:
-      Description: "Allows the product to launch with the policies granted by the associated role."
-      PortfolioId: !Ref BaselinePortfolio
-      ProductId: !Ref EC2LinuxProduct
-      RoleArn: !GetAtt LaunchConstraintRole.Arn
-    DependsOn: LinuxAssociation
-
-  MoodleBaselineLaunchConstraint:
-    Type: "AWS::ServiceCatalog::LaunchRoleConstraint"
-    Properties:
-      Description: "Allows the product to launch with the policies granted by the associated role."
-      PortfolioId: !Ref BaselinePortfolio
-      ProductId: !Ref Moodle
-      RoleArn: !GetAtt LaunchConstraintRole.Arn
-    DependsOn: MoodleAssociation
 
   WorkspacesBaselineLaunchConstraint:
     Type: "AWS::ServiceCatalog::LaunchRoleConstraint"
@@ -204,8 +88,58 @@ Resources:
             Statement:
               - Resource: '*'
                 Effect: "Allow"
-                Action: '*'
+                Action:
                   # Permissions required for the provisioning the products
+                  - 'workspaces:AssociateConnectionAlias'
+                  - 'workspaces:AssociateIpGroups'
+                  - 'workspaces:AuthorizeIpRules'
+                  - 'workspaces:CopyWorkspaceImage'
+                  - 'workspaces:CreateConnectionAlias'
+                  - 'workspaces:CreateIpGroup'
+                  - 'workspaces:CreateTags'
+                  - 'workspaces:CreateUpdatedWorkspaceImage'
+                  - 'workspaces:CreateWorkspaceBundle'
+                  - 'workspaces:CreateWorkspaces'
+                  - 'workspaces:DeleteTags'
+                  - 'workspaces:DeregisterWorkspaceDirectory'
+                  - 'workspaces:DescribeAccount'
+                  - 'workspaces:DescribeAccountModifications'
+                  - 'workspaces:DescribeClientProperties'
+                  - 'workspaces:DescribeConnectionAliasPermissions'
+                  - 'workspaces:DescribeConnectionAliases'
+                  - 'workspaces:DescribeIpGroups'
+                  - 'workspaces:DescribeTags'
+                  - 'workspaces:DescribeWorkspaceBundles'
+                  - 'workspaces:DescribeWorkspaceDirectories'
+                  - 'workspaces:DescribeWorkspaceImagePermissions'
+                  - 'workspaces:DescribeWorkspaceImages'
+                  - 'workspaces:DescribeWorkspaceSnapshots'
+                  - 'workspaces:DescribeWorkspaces'
+                  - 'workspaces:DescribeWorkspacesConnectionStatus'
+                  - 'workspaces:DisassociateConnectionAlias'
+                  - 'workspaces:DisassociateIpGroups'
+                  - 'workspaces:ImportWorkspaceImage'
+                  - 'workspaces:ListAvailableManagementCidrRanges'
+                  - 'workspaces:MigrateWorkspace'
+                  - 'workspaces:ModifyAccount'
+                  - 'workspaces:ModifyClientProperties'
+                  - 'workspaces:ModifySelfservicePermissions'
+                  - 'workspaces:ModifyWorkspaceAccessProperties'
+                  - 'workspaces:ModifyWorkspaceCreationProperties'
+                  - 'workspaces:ModifyWorkspaceProperties'
+                  - 'workspaces:ModifyWorkspaceState'
+                  - 'workspaces:RebootWorkspaces'
+                  - 'workspaces:RebuildWorkspaces'
+                  - 'workspaces:RegisterWorkspaceDirectory'
+                  - 'workspaces:RestoreWorkspace'
+                  - 'workspaces:RevokeIpRules'
+                  - 'workspaces:StartWorkspaces'
+                  - 'workspaces:StopWorkspaces'
+                  - 'workspaces:TerminateWorkspaces'
+                  - 'workspaces:UpdateConnectionAliasPermission'
+                  - 'workspaces:UpdateRulesOfIpGroup'
+                  - 'workspaces:UpdateWorkspaceBundle'
+                  - 'workspaces:UpdateWorkspaceImagePermission'
               - Resource:
                   - "arn:aws:cloudformation:*:*:stack/SC-*"
                   - "arn:aws:cloudformation:*:*:changeSet/SC-*"
@@ -224,7 +158,6 @@ Resources:
                 Action:
                   - sns:Publish
 
-
 #SNS topic notification when a new product is provisioned
   EngineeringCreatedTopic:
     Type: "AWS::SNS::Topic"
@@ -237,26 +170,6 @@ Resources:
       Endpoint: "scandura+infra@amazon.com"
       Protocol: "email"
       TopicArn: !Ref EngineeringCreatedTopic
-
-  VPCCreatedLaunchNotification:
-    Type: "AWS::ServiceCatalog::LaunchNotificationConstraint"
-    Properties:
-      Description: "Publishes notifications when a VPC is provisioned."
-      NotificationArns:
-        - !Ref EngineeringCreatedTopic
-      PortfolioId: !Ref BaselinePortfolio
-      ProductId: !Ref VPCProduct
-    DependsOn: VPCAssociation
-
-  MoodleCreatedLaunchNotification:
-    Type: "AWS::ServiceCatalog::LaunchNotificationConstraint"
-    Properties:
-      Description: "Publishes notifications when a Moodle is provisioned."
-      NotificationArns:
-        - !Ref EngineeringCreatedTopic
-      PortfolioId: !Ref BaselinePortfolio
-      ProductId: !Ref Moodle
-    DependsOn: MoodleAssociation
 
   WorkspaceCreatedLaunchNotification:
     Type: "AWS::ServiceCatalog::LaunchNotificationConstraint"
