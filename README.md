@@ -1,6 +1,6 @@
 ## aws-severless-vending-machine
 
-These sample applications demonstrate how to create a solution to developer teams consume IaC Products, like a "Vending Machine", to automated deploy cloud service in their AWS Accounts without open a ticket or request in IT department.
+This sample application demonstrate how to create a solution to developer teams consume IaC Products, like a "Vending Machine", to automated deploy cloud service in their AWS Accounts without open a ticket or request in IT department.
 
 <p align="center">
 <img src="/images/vendingmachine-sample.png" width="550">
