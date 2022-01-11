@@ -31,7 +31,8 @@ Resources:
         Description: "Workspace Cloudformation Template"
         Name: "Workspace Template"
         Info:
-          LoadTemplateFromURL : "https://s3.amazonaws.com/vendingmachinetemplates/servicecatalog/workspace/workspaces-sc-template.yaml"
+          # CHANGE THE S3 BUCKET HERE
+          LoadTemplateFromURL : "https://s3.amazonaws.com/##S3VendingMachineTemplatesBucket##/workspaces-sc-template.yaml"
 
   WorkspacesAssociation:
      Type: "AWS::ServiceCatalog::PortfolioProductAssociation"
