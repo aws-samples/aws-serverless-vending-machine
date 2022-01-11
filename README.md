@@ -1,4 +1,4 @@
-## aws-severless-vending-machine
+## aws-serverless-vending-machine
 
 This sample application demonstrate how to create a solution to developer teams consume IaC Products, like a "Vending Machine", to automated deploy cloud service in their AWS Accounts without open a ticket or request in IT department.
 
@@ -31,7 +31,7 @@ Install
 First clone this repo:
 
 ```
-git clone https://github.com/aws-samples/aws-severless-vending-machine
+git clone https://github.com/aws-samples/aws-serverless-vending-machine
 ```
 
 Deploy the Stack file [scripts/deployServerlessVendingMachine.yaml](./scripts/deployServerlessVendingMachine.yaml) at the end check the Stack Outputs to follow the instalation process.
