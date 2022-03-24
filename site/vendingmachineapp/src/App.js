@@ -41,7 +41,7 @@ Amplify.configure({
            {
                name: "VendingMachine-API",
                //CHANGE HERE THE VENDING MACHINE API
-               endpoint: "https://j7dnqvme5c.execute-api.sa-east-1.amazonaws.com/default",
+               endpoint: "https://XXXXXXXXXX.execute-api.REGION.amazonaws.com/default",
                custom_header: async () => {
                   return { Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}` }
                }
