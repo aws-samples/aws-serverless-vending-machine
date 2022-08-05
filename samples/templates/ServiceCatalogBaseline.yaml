@@ -154,23 +154,7 @@ Resources:
                   - cloudformation:SetStackPolicy
                   - cloudformation:ValidateTemplate
                   - cloudformation:UpdateStack
-              - Resource: !Sub "arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${EngineeringCreatedTopic.TopicName}"
-                Effect: "Allow"
-                Action:
-                  - sns:Publish
 
-#SNS topic notification when a new product is provisioned
-  EngineeringCreatedTopic:
-    Type: "AWS::SNS::Topic"
-    Properties:
-      DisplayName: "Engineering Product Created"
-
-  EngineeringSubscription:
-    Type: "AWS::SNS::Subscription"
-    Properties:
-      Endpoint: "scandura+infra@amazon.com"
-      Protocol: "email"
-      TopicArn: !Ref EngineeringCreatedTopic
 
   WorkspaceCreatedLaunchNotification:
     Type: "AWS::ServiceCatalog::LaunchNotificationConstraint"
