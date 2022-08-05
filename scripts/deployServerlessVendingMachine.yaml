@@ -23,6 +23,11 @@ Parameters:
     Description: The Organization ID who will access the S3 Bucket with CFN Templates.
     Default: ''
 
+  KmsMaterKeyId:
+    Type: String
+    Description: The KMS Master Key ID to encript the SNS content.
+    Default: ''
+
 Resources:
 
 #Front-end
@@ -241,10 +246,13 @@ Resources:
     Type: AWS::SNS::Topic
     Properties:
       TopicName: SNSInfra
+      KmsMasterKeyId: !Ref KmsMaterKeyId
       Subscription:
         -
            Endpoint: !Ref EmailNotification
            Protocol: email
+
+
 
 #lambdas
   GetDeployDataDynamoSF:
@@ -944,6 +952,7 @@ Resources:
   SNSHumanApprovalEmailTopic:
     Type: AWS::SNS::Topic
     Properties:
+      KmsMasterKeyId: !Ref KmsMaterKeyId
       Subscription:
         -
            Endpoint: !Sub ${EmailApprover}
