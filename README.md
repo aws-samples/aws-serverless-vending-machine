@@ -1,78 +1,73 @@
 ## aws-serverless-vending-machine
 
-This sample application demonstrate how to create a solution to developer teams consume IaC Products, like a "Vending Machine", to automated deploy cloud service in their AWS Accounts without open a ticket or request in IT department.
+> **⚠️ This project is discontinued and no longer maintained.**
+> The source code was removed. The last commit with the full implementation is [`893edb7`](https://github.com/aws-samples/aws-serverless-vending-machine/tree/893edb7). It is kept for reference only: it relies on end-of-life runtimes (Node.js 12, Amplify JS v4, Create React App) and should not be deployed.
+
+This repository now documents the idea behind the project and points to current alternatives.
+
+## The idea
+
+Developer teams often need to open a ticket with IT or the Cloud Center of Excellence (CCoE) to get standard infrastructure, such as a workspace, a VPC, or an application stack with a CI/CD pipeline. The Vending Machine replaced that ticket with a self-service portal. Developers picked a pre-approved Infrastructure as Code (IaC) product, filled a short form, and the product was deployed to their AWS account.
 
 <p align="center">
 <img src="/images/vendingmachine-sample.png" width="550">
 </p>
 
-In other hand, the CCoE teams or SysOps administrators can create Cloud Products, for example, a .NET application running in ECS, Fargate and a CI/CD pipelines or operational products, like a VPC with a Transit Gateway Peering.
+Two roles shared the portal:
 
-The Vending Machine was build using AWS Serverless components, a low cost and an easy application to support
+- **CCoE / SysOps administrators** published products as CloudFormation templates, wrapped in an AWS Service Catalog portfolio shared across the AWS Organization. This kept standards (tags, networking, roles) in one place.
+- **Developer teams** consumed those products without needing console access or knowledge of the underlying templates.
+
+## Architecture
+
+The solution was fully serverless, which kept it cheap and easy to operate.
 
 <p align="center">
 <img src="/images/vendingmachine-blogpost.png" width="550">
 </p>
 
-**DO NOT USE THIS SOLUTION TO CREATE A CONSOLE OVER THE AWS CONSOLE!**
+- **Frontend:** a React single-page app hosted on S3 and CloudFront, with Amazon Cognito authentication at the edge (Lambda@Edge).
+- **API:** Amazon API Gateway (REST) secured by Cognito tokens, backed by AWS Lambda functions.
+- **Orchestration:** AWS Step Functions ran the deployment flow, creating CloudFormation StackSet instances in the target accounts.
+- **Storage:** Amazon DynamoDB stored the product catalog and the deployment requests; S3 stored the product templates, shared with the Organization by bucket policy.
+- **Provisioning:** a Service Catalog baseline was deployed to every account through a StackSet, so each product was a `AWS::ServiceCatalog::CloudFormationProvisionedProduct` reused like a library.
 
-This sample code is made available under a modified MIT license. See the LICENSE file.
+## Product model
 
-## Building the examples
-Dependencies
+Each product was described by a JSON document. The portal built the request form dynamically from the `options` and `tags` blocks, so new products needed no frontend changes.
 
-- AWS Accounts (you can adapt this sample to run in only one account, but it is recommended two or more accounts with AWS Organization enabled);
-- [The AWS CLI version 1 or 2](https://docs.aws.amazon.com/cli/latest/userguide/welcome-versions.html);
-- [if you have 2 or more accounts, you need deploy permissions to run Stack Set operation](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/stacksets-prereqs.html)
-- npm 7.20.3
-
-Install
-
-First clone this repo:
-
-```
-git clone https://github.com/aws-samples/aws-serverless-vending-machine
-```
-
-Deploy the Stack file [scripts/deployServerlessVendingMachine.yaml](./scripts/deployServerlessVendingMachine.yaml) at the end check the Stack Outputs to follow the instalation process.
-
-The next step is edit the [App.js](site/vendingmachineapp/src/App.js) file to change the REST API endpoint:
-
-```
-API: {
-     endpoints: [
-         {
-             name: "VendingMachine-API",
-
-             //CHANGE HERE THE VENDING MACHINE API
-             endpoint: "https://RESTAPIID.execute-api.sa-east-1.amazonaws.com/default",
-
-             custom_header: async () => {
-                return { Authorization: `Bearer ${(await Auth.currentSession()).getIdToken().getJwtToken()}` }
-             }
-         }
-     ]
- }
-```
-Go to Front-end directory and run the follow commands:
-
-```
-cd site/vendingmachineapp/
-npm install
-npm run build
+```json
+{
+  "name": "Workspace",
+  "description": "Amazon WorkSpaces virtual desktop",
+  "image": "workspace.png",
+  "stack": {
+    "stacksetName": "Workspace",
+    "templateUrl": "https://<templates-bucket>.s3.amazonaws.com/products/product-workspace.yaml"
+  },
+  "options": [
+    { "name": "User", "label": "User", "type": "text", "required": "true" }
+  ],
+  "tags": [
+    { "name": "critical", "label": "Criticality", "type": "options", "values": ["High", "Medium", "Low"] },
+    { "name": "costcenter", "label": "Cost center", "type": "text" }
+  ]
+}
 ```
 
-Go to the build folder and copy files to S3, there is a *S3VendingMachineSiteBucket* variable in the Stack Outputs, get the S3 bucket name and use in theses commands:
+- `options`: input parameters passed to the template. `type` is `text` (free field) or `options` (dropdown with `values`).
+- `tags`: tags applied to every deployed resource, rendered the same way.
 
-```
-cd build
-aws s3 rm s3://...-cloudfrontauthorizationedge-.... —recursive
-aws s3 cp . s3://...cloudfrontauthorizationedge-.... —recursive
-```
+## Current alternatives
 
-And now just open the Vending Machine Website. You can get the VM URL on the *VendingMachineUrl* variable in the Stack Output.
+The self-service infrastructure problem is now covered by mature tools:
 
-There are more information to add Products in the folder [samples](./samples).
+- **[AWS Service Catalog](https://aws.amazon.com/servicecatalog/)**: native end-user console and API to launch pre-approved products, with constraints, tag options, and portfolio sharing across the Organization. It covers most of what this project built by hand.
+- **[AWS Control Tower Account Factory](https://docs.aws.amazon.com/controltower/latest/userguide/account-factory.html)** and **[Account Factory for Terraform (AFT)](https://docs.aws.amazon.com/controltower/latest/userguide/aft-overview.html)**: governed vending of new AWS accounts with baseline customizations.
+- **[Backstage](https://backstage.io/)** (Software Templates): open source Internal Developer Portal for self-service scaffolding and infrastructure, with plugins for AWS.
+- **[Port](https://www.port.io/)** and similar Internal Developer Portals: managed alternatives with self-service actions and a software catalog.
+
+Note: AWS Proton, which also targeted this use case, [reached end of support on October 7, 2026](https://docs.aws.amazon.com/proton/latest/userguide/proton-end-of-support.html).
 
 ## Security
 
